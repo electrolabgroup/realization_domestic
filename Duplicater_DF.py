@@ -7,6 +7,7 @@ import os
 from openpyxl import load_workbook, Workbook
 
 
+
 class App:
     def __init__(self, root):
         self.root = root
@@ -56,6 +57,7 @@ class App:
         self.log_output("Processing stopped.")
 
     def process_data(self):
+        retry_count = 1
 
         while self.processing:
 
@@ -133,8 +135,13 @@ class App:
                         break  # Exit if no data key in response
 
                 except requests.exceptions.RequestException as e:
-                    self.log_output(f"Error: {e}")
-                    break
+                    self.log_output(f"Error Occured: Please wait (Retrying...)")
+                    retry_count += 1
+                    self.stop_processing()
+                    time.sleep(5)
+                    self.start_processing()
+                    return
+
 
             # Check if any data was fetched and create DataFrame
             if all_data:
@@ -203,8 +210,12 @@ class App:
                         break  # Exit if no data key in response
 
                 except requests.exceptions.RequestException as e:
-                    self.log_output(f"Error: {e}")
-                    break
+                    self.log_output(f"Error Occured:Please wait (Retrying...)")
+                    retry_count += 1
+                    self.stop_processing()
+                    time.sleep(5)
+                    self.start_processing()
+                    return
 
             # Convert the collected data to a DataFrame
             spares_df = pd.json_normalize(all_data)
@@ -269,8 +280,12 @@ class App:
                         break  # Exit if no data key in response
 
                 except requests.exceptions.RequestException as e:
-                    self.log_output(f"Error: {e}")
-                    break
+                    self.log_output(f"Error Occured : Please wait (Retrying...)")
+                    retry_count += 1
+                    self.stop_processing()
+                    time.sleep(5)
+                    self.start_processing()
+                    return
 
             # Convert the collected data to a DataFrame
             machine_df_r = pd.json_normalize(all_data)
@@ -333,8 +348,12 @@ class App:
                         break  # Exit if no data key in response
 
                 except requests.exceptions.RequestException as e:
-                    self.log_output(f"Error: {e}")
-                    break
+                    self.log_output(f"Error Occured : Please wait (Retrying...)")
+                    retry_count += 1
+                    self.stop_processing()
+                    time.sleep(5)
+                    self.start_processing()
+                    return
 
             # Convert the collected data to a DataFrame
             machine_mrp = pd.json_normalize(all_data)
@@ -643,8 +662,12 @@ class App:
                         break  # Exit if no data key in response
 
                 except requests.exceptions.RequestException as e:
-                    self.log_output(f"Error: {e}")
-                    break
+                    self.log_output(f"Error Occured : Please wait (Retrying...)")
+                    retry_count += 1
+                    self.stop_processing()
+                    time.sleep(5)
+                    self.start_processing()
+                    return
 
             # Convert the collected data to a DataFrame
             cr_df = pd.json_normalize(all_data)
@@ -1127,8 +1150,12 @@ class App:
                         break  # Exit if no data key in response
 
                 except requests.exceptions.RequestException as e:
-                    self.log_output(f"Error: {e}")
-                    break
+                    self.log_output(f"Error Occured : Please wait (Retrying...)")
+                    retry_count += 1
+                    self.stop_processing()
+                    time.sleep(5)
+                    self.start_processing()
+                    return
 
             # Create DataFrame
             issue = pd.json_normalize(all_data)
@@ -1188,8 +1215,12 @@ class App:
                         break  # Exit if no data key in response
 
                 except requests.exceptions.RequestException as e:
-                    self.log_output(f"Error: {e}")
-                    break
+                    self.log_output(f"Error Occured : Please wait (Retrying...)")
+                    retry_count += 1
+                    self.stop_processing()
+                    time.sleep(5)
+                    self.start_processing()
+                    return
 
             # Create DataFrame
             s_df = pd.json_normalize(all_data)
@@ -1318,8 +1349,12 @@ class App:
                         break  # Exit if no data key in response
 
                 except requests.exceptions.RequestException as e:
-                    self.log_output(f"Error: {e}")
-                    break
+                    self.log_output(f"Error Occured : Please wait (Retrying...)")
+                    retry_count += 1
+                    self.stop_processing()
+                    time.sleep(5)
+                    self.start_processing()
+                    return
 
             # Create DataFrame
             warranty = pd.json_normalize(all_data)
