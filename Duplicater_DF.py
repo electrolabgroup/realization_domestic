@@ -368,7 +368,7 @@ class App:
             machine_df = machine_df.round(2)
             machine_df.head()
 
-            # In[ ]:
+            
 
             so_df.fillna(0, inplace=True)
 
@@ -603,7 +603,7 @@ class App:
             # Drop unnecessary columns if needed
             rl_df = rl_df.drop(['Line Item Count'], axis=1)
 
-            # In[ ]:
+            
 
             import requests
             import pandas as pd
@@ -672,7 +672,7 @@ class App:
             # Convert the collected data to a DataFrame
             cr_df = pd.json_normalize(all_data)
 
-            # In[ ]:
+            
 
             # Replace 'NONE' with 0
             cr_df['custom_credit_rate'] = cr_df['custom_credit_rate'].replace('NONE', 0)
@@ -680,24 +680,24 @@ class App:
             # Convert to numeric and replace non-numeric values with 0
             cr_df['custom_credit_rate'] = pd.to_numeric(cr_df['custom_credit_rate'], errors='coerce').fillna(0)
 
-            # In[ ]:
+            
 
             cr_df.rename(columns={'name': 'customer'}, inplace=True)
 
-            # In[ ]:
+            
 
             fl_df = pd.merge(rl_df, cr_df, on='customer', how='outer')
             # Set NaN values in 'Credit Rate' column to zero
             fl_df['custom_credit_rate'] = fl_df['custom_credit_rate'].fillna(0)
 
-            # In[ ]:
+            
 
             # Assuming Credit Rate is a column in fl_df
             fl_df['payment_terms_template'] = fl_df.apply(
                 lambda row: row['payment_terms_template'] if row['custom_credit_rate'] == 0 else 100 - row[
                     'custom_credit_rate'], axis=1)
 
-            # In[ ]:
+            
 
             # Ensure no NaN values in 'amount', 'commission_rate', 'Average Freight', and 'payment_terms_template'
             fl_df['amount'] = fl_df['amount'].fillna(0)
@@ -720,7 +720,7 @@ class App:
 
             fl_df['Realization line item'] = (fl_df['realization_value'] / fl_df['target']).round(1)
 
-            # In[ ]:
+            
 
             fl_df['realization_value'] = fl_df['realization_value'].fillna(0)
             fl_df['target'] = fl_df['target'].fillna(0)
@@ -730,12 +730,12 @@ class App:
 
             fl_df['realization'] = (fl_df['realization_value_sum'] / fl_df['target_sum']).round(1)
 
-            # In[ ]:
+            
 
             # Drop rows where the 'Name' column is null
             fl_df = fl_df.dropna(subset=['name'])
 
-            # In[ ]:
+            
 
             # Assuming 'Realization in %' is a numeric column
             fl_df['realization'] = pd.to_numeric(fl_df['realization'], errors='coerce')
@@ -769,15 +769,15 @@ class App:
 
             sheet_df2 = fl_df[['name', 'customer', 'realization_value', 'target', 'realization', 'reason_for_hold']]
 
-            # In[ ]:
+            
 
             sheet_df1['Date and Time'] = datetime.now()
 
-            # In[ ]:
+            
 
             sheet_df1['realization'] = sheet_df1['realization'] / 100
 
-            # In[ ]:
+            
 
             aggregation = {
                 'realization_value': 'sum',
@@ -786,23 +786,23 @@ class App:
                 'reason_for_hold': 'first'
             }
 
-            # In[ ]:
+            
 
             sheet_df2 = sheet_df2.groupby('name').agg(aggregation).reset_index()
 
-            # In[ ]:
+            
 
             sheet_df2['realization_value'] = sheet_df2['realization_value'] / 100
 
-            # In[ ]:
+            
 
             sheet_df2['Date and Time'] = datetime.now()
 
-            # In[ ]:
+            
 
             sheet_df3.head()
 
-            # In[ ]:
+            
 
             selected_columns = ['name', 'realization', 'reason_for_hold']
             fl_df1 = fl_df[selected_columns]
@@ -811,18 +811,18 @@ class App:
             fl_df1 = fl_df1.drop_duplicates(subset=['name'])
             fl_df1.head()
 
-            # In[ ]:
+            
 
             selected_columns = ['item_code', 'Realization line item']
             fl_df2 = fl_df[selected_columns]
             fl_df2.rename(columns={
                 "Realization line item": 'realization'}, inplace=True)
 
-            # In[ ]:
+            
 
             fl_df3 = fl_df[['name', 'realization', 'Realization line item', 'reason_for_hold']]
 
-            # In[ ]:
+            
 
             condition1 = sheet_df1['Sales Order'].str.contains('SODM')
             condition2 = sheet_df1['Sales Order'].str.contains('SOEXP')
@@ -848,7 +848,7 @@ class App:
             spares_sheet_df3 = sheet_df3[~(condition1 | condition2)]  # Remove rows with SODM or SOEXP
             export_sheet_df3 = sheet_df3[~(condition1 | condition3)]  # Remove rows with SODM or SODS
 
-            # In[ ]:
+            
 
             # Get the current month and year
             current_month_year = datetime.now().strftime("%Y-%m")
@@ -902,7 +902,7 @@ class App:
             for sheet_name, df in machine_dataframes_and_sheets.items():
                 append_to_excel(df, sheet_name)
 
-            # In[ ]:
+            
 
             # Get the current month and year
             current_month_year = datetime.now().strftime("%Y-%m")
@@ -956,7 +956,7 @@ class App:
             for sheet_name, df in spare_dataframes_and_sheets.items():
                 append_to_excel(df, sheet_name)
 
-            # In[ ]:
+            
 
             # Get the current month and year
             current_month_year = datetime.now().strftime("%Y-%m")
@@ -1010,7 +1010,7 @@ class App:
             for sheet_name, df in export_dataframes_and_sheets.items():
                 append_to_excel(df, sheet_name)
 
-            # In[ ]:
+            
 
             import requests
             import json
